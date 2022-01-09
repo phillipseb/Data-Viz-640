@@ -2,7 +2,9 @@
 title: "DSC640_Assignment1.2_PhillipsEmily"
 author: "Emily Phillips"
 date: "12/1/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -28,27 +30,27 @@ head(obama_rate)
 ```
 
 
-```{r bar, echo=TRUE,results='hide'}
+```{r bar, echo=TRUE}
 library(ggplot2)
 
 #making the plot using hotdog_win
-ggplot(data=hotdog_win,aes(x=Country,y=`Dogs eaten`)) + geom_bar(stat="identity",fill="steelblue")+theme_minimal()
+ggplot(data=hotdog_win,aes(x=Country,y=`Dogs eaten`)) + geom_bar(stat="identity",fill="steelblue")+theme_minimal() + ggtitle("Total Number of Dogs Eaten per Country")
 ```
 
-```{r stacked, echo=TRUE,results='hide'}
+```{r stacked, echo=TRUE}
 #grouping by winner to show total number of dogs eaten in each country by each winner
-ggplot(data=hotdog_win,aes(fill=Winner,y=`Dogs eaten`,x=Country)) + geom_bar(position="stack",stat="identity")
+ggplot(data=hotdog_win,aes(fill=Winner,y=`Dogs eaten`,x=Country)) + geom_bar(position="stack",stat="identity") + ggtitle("Number of Dogs Eaten by Winner Name and Country")
 ```
 
 
-```{r pie, echo=TRUE,results='hide'}
-bp <- ggplot(obama_rate,aes(x="",y=None,fill=Issue))+geom_bar(width=1,stat="identity")
+```{r pie, echo=TRUE}
+bp <- ggplot(obama_rate,aes(x="",y=None,fill=Issue))+geom_bar(width=1,stat="identity") + ggtitle("Percentage of Total None Responses by Issue Topic")
 bp
 
 pie <- bp + coord_polar("y",start=0)
 pie
 ```
-```{r donut, echo=TRUE,results='hide'}
+```{r donut, echo=TRUE}
 library(dplyr)
 #setting size to allocate space for hole/circle
 hsize <- 4
@@ -57,7 +59,7 @@ hsize <- 4
 hotdog_win <- hotdog_win %>% mutate(x=hsize)
 
 #plot donut chart
-ggplot(hotdog_win,aes(x=hsize,y=`Dogs eaten`,fill=Country))+geom_col()+coord_polar(theta="y")+xlim(c(0.2,hsize+0.5))
+ggplot(hotdog_win,aes(x=hsize,y=`Dogs eaten`,fill=Country))+geom_col()+coord_polar(theta="y")+xlim(c(0.2,hsize+0.5)) + ggtitle("Percentage of Total Dogs Eaten by Country")
 ```
 
 

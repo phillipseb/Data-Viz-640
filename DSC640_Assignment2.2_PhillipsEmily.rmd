@@ -1,0 +1,40 @@
+---
+title: "DSC640_Assignment2.2_PhillipsEmily"
+author: "Emily Phillips"
+date: "12/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r population data, echo=TRUE,results='hide'}
+library(tidyverse)
+library(readxl)
+
+#data for world-population excel
+world_pop <- read_excel("ex2-2/world-population.xlsm")
+head(world_pop)
+```
+
+
+```{r line, echo=TRUE}
+library(ggplot2)
+
+# Basic line plot with points
+ggplot(data=world_pop, aes(x=Year, y=Population, group=1)) +
+  geom_line()+
+  geom_point() + ggtitle("Population Growth from 1960 to 2010")
+```
+```{r step, echo=TRUE}
+library(ggplot2)
+
+# Basic step plot with points
+ggplot(data=world_pop, aes(x=Year, y=Population, group=1)) +
+  geom_step() +
+  geom_point() + ggtitle("Population Growth from 1960 to 2010")
+```
+
+
+
