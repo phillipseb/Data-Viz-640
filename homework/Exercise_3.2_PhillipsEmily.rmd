@@ -1,0 +1,88 @@
+---
+title: "Exercises3_2_PhillipsEmily"
+author: "Emily Phillips"
+date: "1/19/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Reading in Data
+
+```{r libraries}
+library(readxl)
+library(tidyverse)
+library(Hmisc)
+```
+
+```{r expenditures}
+#data for expenditures excel file
+expend <- read_excel("ex3-3/expenditures.xlsx")
+head(expend)
+```
+```{r describe}
+#describing expenditures dataframe --> getting data types
+summary(expend)
+```
+
+
+```{r unemployment}
+#data for unemployment rate excel file
+unemploy <- read_excel("ex3-3/unemployement-rate-1948-2010.xlsx")
+head(unemploy)
+```
+```{r describe2}
+#describing unemployment dataframe --> getting data types
+summary(unemploy)
+```
+
+
+#Tree Maps
+
+```{r tree}
+#install.packages("treemapify")
+library(treemapify)
+#install.packages("ggplot2")
+library(ggplot2)
+
+#aggregating values in the dataframe by sums per year
+aggregated_df <- aggregate(unemploy$Value, list(unemploy$Year), FUN=sum)
+
+#renaming columns
+# Rename column where names is "Sepal.Length"
+names(aggregated_df)[names(aggregated_df) == "Group.1"] <- "Year"
+names(aggregated_df)[names(aggregated_df) == "x"] <- "unemployment_rate"
+aggregated_df
+
+#plotting tree map for total unemployment rates per year
+#label on Year
+ggplot(aggregated_df, aes(area =unemployment_rate, fill = Year,label=unemployment_rate)) +
+  geom_treemap() + geom_treemap_text() + ggtitle("Hierarchical Ranking of Unemployment Rates by Year")
+```
+# Area Chart
+
+```{r area}
+
+#plotting the area chart for unemployment rate vs. year
+#label on Year
+ggplot(aggregated_df, aes(x =Year, y = unemployment_rate)) +geom_area(fill='#142F86',alpha=2) + ggtitle("Total Change in Unemployment Rates from 1948-2010")
+```
+
+#Stacked Area Chart
+
+```{r stacked}
+
+#plotting the area chart for expenditure vs. year by category
+#label on Year
+ggplot(expend, aes(x =year, y = expenditure,fill=category)) +geom_area() + ggtitle("Total Change in Expenditures by Year and Category")
+```
+
+
+
+
+
+

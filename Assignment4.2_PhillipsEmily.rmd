@@ -1,0 +1,89 @@
+---
+title: "Assignment4.2_PhillipsEmily"
+author: "Emily Phillips"
+date: "1/30/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Reading in Data
+
+```{r libraries}
+library(readxl)
+library(tidyverse)
+library(Hmisc)
+```
+
+```{r birth-rate}
+#data for birth-date excel file
+birth <- read_excel("ex4-2/birth-rate.xlsx")
+head(birth)
+```
+```{r birth-rate yar}
+#data for birth-rate yearly excel file
+birth_year <- read_excel("ex4-2/birth-rates-yearly.xlsx")
+head(birth_year)
+```
+
+
+```{r crime-rate}
+#data for crime-rate excel file
+crime <- read_excel("ex4-2/crimerates-by-state-2005.xlsx")
+head(crime)
+```
+```{r tv}
+#data for tv-sizes excel file
+tv <- read_excel("ex4-2/tv_sizes.xlsx")
+head(tv)
+```
+
+
+#Scatter Plot
+```{r scatter}
+plot(crime$aggravated_assault, crime$forcible_rape, main="Relationship between Forcible Rapes and Aggravated Assaults in the U.S.",
+   xlab="Number of Aggravated Assaults", ylab="Number of Forcible Rapes ", pch=19)
+
+# Add fit lines
+abline(lm(crime$forcible_rape~crime$aggravated_assault), col="red") # regression line (y~x)
+```
+
+# Bubble Chart
+```{r bubble}
+library(ggplot2)
+
+# Most basic bubble plot
+#ggplot(crime, aes(x=robbery, y=burglary, size = population)) +
+    #geom_point(alpha=0.7)
+
+# Most basic bubble plot
+crime %>%
+  arrange(desc(population)) %>%
+  mutate(state = factor(state, state)) %>%
+  ggplot(aes(x=burglary, y=robbery, size = population)) +
+    geom_point(alpha=0.5) +
+    scale_size(range = c(.1, 15), name="Population (M)") +
+  ggtitle("Robbery vs. Burglary with Population Factor")
+```
+# Density Chart
+```{r density}
+library(ggplot2)
+
+# Change line color and fill color
+ggplot(birth_year, aes(x=rate))+
+  geom_density(color="darkblue", fill="lightblue")+ ggtitle("Yearly Birth Rates Density Curve")
+```
+```{r density_2}
+subset_year <- subset(birth_year, year=2008,
+select=c(year, rate))
+# Basic density plot in ggplot2
+ggplot(subset_year, aes(x = rate, colour = year)) +
+  geom_density(color="darkblue", fill="lightblue")+ ggtitle("2008 Birth Rates Density Curve")
+```
+
+
+

@@ -1,0 +1,102 @@
+---
+title: "Exercises5_2_PhillipsEmily"
+author: "Emily Phillips"
+date: "2/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Reading in Data
+
+```{r libraries}
+library(readxl)
+library(tidyverse)
+library(Hmisc)
+library(ggplot2)
+library(circlize)
+library(maps)
+library(reshape2)
+library(metR)
+```
+
+
+```{r costco}
+#data for costcos-geocoded excel file
+costco <- read_excel("ex5-2/costcos-geocoded.xlsx")
+head(costco)
+```
+
+
+```{r ppg}
+#data for ppg2008 excel file
+ppg <- read_excel("ex5-2/ppg2008.xlsx")
+head(ppg)
+
+dim(ppg)
+```
+
+```{r heat}
+#creating heat map with ppg data
+
+#reverse the order of the data by points per game
+ppg <- ppg[order(ppg$PTS, decreasing=FALSE),]
+
+#putting data in matrix format
+ppg_matrix <- data.matrix(ppg)
+
+#name the rows by player name rather than row number
+row.names(ppg_matrix) <- ppg$Name
+ppg_matrix <- ppg_matrix[,2:20]
+
+#plug into heatmap function with matrix
+#scale = "column", use the minimum and maximum of each column
+ppg_heatmap <- heatmap(ppg_matrix, Rowv=NA,
+    Colv=NA, col = cm.colors(256), scale="column", margins=c(5,10),main= "Heat Map for NBA Players' Basketball Stats",xlab = "Statistical Measures",ylab="Player Names")
+```
+```{r spatial}
+#creating base layer of map --> U.S.A
+map(database="state", col="#cccccc")
+
+#second layer is costco locations
+symbols(costco$Longitude, costco$Latitude, bg="#e2373f", fg="#ffffff",
+  lwd=0.5, circles=rep(1, length(costco$Longitude)),
+  inches=0.05, add=TRUE,main= "Spatial Chart of Costco Locations in the U.S.")
+
+#map "state" excludes Hawaii and Alaska so they will not be shown in this map of Costco locations
+```
+```{r contour}
+library(plotly)
+library(reshape2)
+df <- melt(volcano)
+
+p <- ggplot(df, aes(Var1, Var2, z= value)) +
+  geom_contour() +
+  scale_fill_distiller(palette = "Spectral", direction = -1)
+fig <- ggplotly(p)
+
+fig
+```
+
+
+
+```{r contour2}
+
+ggplot(data=ppg, aes(x=PTS,y=TO)) +
+  theme_bw() +
+  geom_point(alpha=0.1, col = "red") +
+  geom_density2d(color="black")+
+  ggtitle("Contour Plot of Time Outs vs. Points Per Game") +
+  theme(plot.title=element_text(hjust=0.5)) +
+  labs(x="PTS",y="TO")
+
+```
+
+
+
+
+
+
+
